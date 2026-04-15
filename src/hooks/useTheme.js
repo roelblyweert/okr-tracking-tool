@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 
 export function useTheme() {
-  const [theme, setTheme] = useState(() => {
-    const stored = localStorage.getItem('theme')
-    if (stored) return stored
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  })
+  // Trust the class the inline FOUC script already set on <html> — avoids
+  // re-reading storage and diverging from the pre-paint decision.
+  const [theme, setTheme] = useState(() =>
+    document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+  )
 
   useEffect(() => {
     const root = document.documentElement
@@ -14,7 +14,11 @@ export function useTheme() {
     } else {
       root.classList.remove('dark')
     }
-    localStorage.setItem('theme', theme)
+    try {
+      localStorage.setItem('theme', theme)
+    } catch {
+      // storage may be blocked (private mode, strict privacy) — theme still works in memory
+    }
   }, [theme])
 
   function toggleTheme() {

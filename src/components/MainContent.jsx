@@ -27,7 +27,7 @@ const STATS = [
 
 export function MainContent() {
   return (
-    <main className="max-w-5xl mx-auto px-6 py-12 transition-colors duration-300">
+    <main className="max-w-5xl mx-auto px-6 py-12">
       {/* Hero */}
       <section className="mb-12">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100 mb-3">
@@ -38,10 +38,10 @@ export function MainContent() {
           light and dark mode — your preference is saved automatically.
         </p>
         <div className="mt-6 flex gap-3">
-          <button className="px-5 py-2.5 rounded-lg bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-400 dark:hover:bg-indigo-500 text-white font-medium transition-colors duration-150">
+          <button type="button" className="px-5 py-2.5 rounded-lg bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-400 dark:hover:bg-indigo-500 text-white font-medium motion-safe:transition-colors motion-safe:duration-150">
             Start learning
           </button>
-          <button className="px-5 py-2.5 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 font-medium transition-colors duration-150">
+          <button type="button" className="px-5 py-2.5 rounded-lg border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 font-medium motion-safe:transition-colors motion-safe:duration-150">
             View docs
           </button>
         </div>
@@ -56,14 +56,14 @@ export function MainContent() {
           {CARDS.map((card) => (
             <div
               key={card.title}
-              className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-6 hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow duration-200"
+              className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-6 hover:shadow-md dark:hover:shadow-slate-900/50 motion-safe:transition-shadow motion-safe:duration-200"
             >
               <span className={`inline-block text-xs font-medium px-2.5 py-1 rounded-full mb-4 ${card.badgeColor}`}>
                 {card.badge}
               </span>
               <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-2">{card.title}</h3>
               <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed">{card.body}</p>
-              <button className="mt-4 text-sm font-medium text-indigo-500 dark:text-indigo-400 hover:underline">
+              <button type="button" className="mt-4 text-sm font-medium text-indigo-500 dark:text-indigo-400 hover:underline">
                 Open module →
               </button>
             </div>

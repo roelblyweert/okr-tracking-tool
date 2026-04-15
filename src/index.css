@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-gray-50 text-gray-900 motion-safe:transition-colors motion-safe:duration-300;
   }
 
   html.dark {

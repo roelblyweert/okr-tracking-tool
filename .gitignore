@@ -32,3 +32,9 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+
+# Claude Code (shared config is tracked; local-only overrides are not)
+.claude/settings.local.json
+
+# Obsidian (editor-local notes metadata)
+.obsidian/

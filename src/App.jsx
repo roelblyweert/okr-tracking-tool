@@ -6,7 +6,7 @@ export default function App() {
   const { theme, toggleTheme } = useTheme()
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+    <div className="min-h-screen">
       <Header theme={theme} onToggle={toggleTheme} />
       <MainContent />
     </div>
