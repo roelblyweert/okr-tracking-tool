@@ -4,8 +4,10 @@ export function ThemeToggle({ theme, onToggle }) {
   return (
     <button
       onClick={onToggle}
+      role="switch"
+      aria-checked={isDark}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-      className="relative inline-flex items-center w-14 h-7 rounded-full transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-800"
+      className="relative inline-flex items-center w-14 h-7 rounded-full transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-800"
       style={{ backgroundColor: isDark ? '#818cf8' : '#d1d5db' }}
     >
       {/* sliding knob */}
