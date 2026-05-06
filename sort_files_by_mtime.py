@@ -69,8 +69,8 @@ def main() -> None:
         writer = csv.writer(fh)
         writer.writerow(["path", "modified_at"])
         for path, mtime in entries:
-            iso = datetime.fromtimestamp(mtime).astimezone().isoformat(timespec="seconds")
-            writer.writerow([str(path.relative_to(root)), iso])
+            date = datetime.fromtimestamp(mtime).astimezone().date().isoformat()
+            writer.writerow([str(path.relative_to(root)), date])
 
     print(f"Wrote {len(entries)} entries to {args.output}")
 

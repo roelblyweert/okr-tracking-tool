@@ -50,7 +50,7 @@ Two columns:
 | Column | Example | Notes |
 | --- | --- | --- |
 | `path` | `docs/USAGE.md` | Relative to the scanned directory. |
-| `modified_at` | `2026-05-06T14:32:11+02:00` | Local-time ISO-8601 with offset. |
+| `modified_at` | `2026-05-06` | Local-time ISO-8601 date (no time component). |
 
 ## Traversal rules
 
