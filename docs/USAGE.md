@@ -7,7 +7,7 @@ A small CLI that walks a directory recursively, sorts every regular file by last
 Python 3.10+ is required (the script uses `X | None` type syntax).
 
 ```sh
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt   # stdlib only — installs nothing
 ```
@@ -15,7 +15,7 @@ pip install -r requirements.txt   # stdlib only — installs nothing
 ## Usage
 
 ```sh
-python sort_files_by_mtime.py <directory> -o <output.csv> [--order desc|asc] [--pattern GLOB]
+python3 sort_files_by_mtime.py <directory> -o <output.csv> [--order desc|asc] [--pattern GLOB]
 ```
 
 ### Arguments
@@ -31,16 +31,16 @@ python sort_files_by_mtime.py <directory> -o <output.csv> [--order desc|asc] [--
 
 ```sh
 # Newest files first, scanning the current directory
-python sort_files_by_mtime.py . -o /tmp/files.csv
+python3 sort_files_by_mtime.py . -o /tmp/files.csv
 
 # Oldest first
-python sort_files_by_mtime.py . -o /tmp/files.csv --order asc
+python3 sort_files_by_mtime.py . -o /tmp/files.csv --order asc
 
 # Only Python files
-python sort_files_by_mtime.py ~/code -o /tmp/py.csv --pattern '*.py'
+python3 sort_files_by_mtime.py ~/code -o /tmp/py.csv --pattern '*.py'
 
 # Output into a directory that does not exist yet — it gets created
-python sort_files_by_mtime.py . -o /tmp/new/dir/files.csv
+python3 sort_files_by_mtime.py . -o /tmp/new/dir/files.csv
 ```
 
 ## CSV format

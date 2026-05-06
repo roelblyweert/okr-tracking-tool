@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 ## 🛠 Commands
-- **Package manager**: `python pip`
+- **Package manager**: `python3 pip`
 - **Runtime**: Locally on laptop using Python venv. No other deployment options supported.
 
 ## 📐 Architecture & Patterns
