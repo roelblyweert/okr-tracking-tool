@@ -11,8 +11,8 @@ import { createClient } from '@supabase/supabase-js';
 // access your Row-Level Security policies allow. NEVER paste the
 // "service_role" key here or anywhere in the repo. See CLAUDE.md.
 // ---------------------------------------------------------------------------
-export const SUPABASE_URL = 'PASTE_YOUR_SUPABASE_PROJECT_URL_HERE';
-export const SUPABASE_ANON_KEY = 'PASTE_YOUR_SUPABASE_ANON_KEY_HERE';
+export const SUPABASE_URL = 'https://hxfgzrnmgfmhixeqgggr.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_ebC-jaN5qicaGPBeYE_mbw_qr3q9xYW';
 
 export const isSupabaseConfigured =
   !SUPABASE_URL.startsWith('PASTE_') && !SUPABASE_ANON_KEY.startsWith('PASTE_');
