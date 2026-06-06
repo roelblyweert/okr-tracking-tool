@@ -10,7 +10,7 @@ on **GitHub Pages** (UI + all OKR logic) that talks directly to **Supabase**
 server. The whole thing is built and deployed in CI — assume **no local dev
 machine** is ever available (the owner works from an iPad).
 
-Live URL: `https://roelblyweert.github.io/claude-code-101/`
+Live URL: `https://roelblyweert.github.io/okr-tracking-tool/`
 
 ## Tech stack
 
@@ -44,8 +44,8 @@ Live URL: `https://roelblyweert.github.io/claude-code-101/`
 
 - **All database access goes through `src/api.ts`** wrapper functions. Do not
   scatter raw Supabase queries across components.
-- Keep `vite.config.ts` `base: '/claude-code-101/'` — it must match the Pages
-  project path or assets break in production.
+- Keep `vite.config.ts` `base: '/okr-tracking-tool/'` — it must match the Pages
+  project path (i.e. the repository name) or assets break in production.
 - Progress math lives in `src/progress.ts`; reuse it, don't reinvent.
 
 ## Key files

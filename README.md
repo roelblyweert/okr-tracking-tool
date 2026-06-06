@@ -8,7 +8,7 @@ cloud — accessible from any browser, including your iPad.
 - **Data + login:** **Supabase** (hosted Postgres + magic-link auth).
 - **No server to run, no laptop needed** — GitHub Actions builds and deploys.
 
-Live site (after setup): `https://roelblyweert.github.io/claude-code-101/`
+Live site (after setup): `https://roelblyweert.github.io/okr-tracking-tool/`
 
 ---
 
@@ -28,7 +28,7 @@ Live site (after setup): `https://roelblyweert.github.io/claude-code-101/`
 ### 3. Point logins back to the app
 1. In Supabase, go to **Authentication → URL Configuration**.
 2. Set **Site URL** to:
-   `https://roelblyweert.github.io/claude-code-101/`
+   `https://roelblyweert.github.io/okr-tracking-tool/`
 3. Add the same URL under **Redirect URLs** if prompted.
 
 > Magic-link email works out of the box on Supabase's built-in mailer for
