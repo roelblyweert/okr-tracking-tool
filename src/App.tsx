@@ -16,6 +16,7 @@ import ObjectiveCard from './components/ObjectiveCard';
 import ObjectiveForm from './components/ObjectiveForm';
 import RoadmapView from './components/RoadmapView';
 import type { KeyResultFormValues } from './components/KeyResultForm';
+import { useHashRoute } from './lib/useHashRoute';
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -53,7 +54,7 @@ function Dashboard({ email }: { email: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [adding, setAdding] = useState(false);
-  const [view, setView] = useState<'list' | 'roadmap'>('list');
+  const [view, setView] = useHashRoute();
 
   async function refresh() {
     setError('');
