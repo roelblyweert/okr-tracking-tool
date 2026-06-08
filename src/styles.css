@@ -435,11 +435,19 @@ code {
   font-size: 12px;
 }
 
-/* Auto-placed gridline tracks; the explicitly placed bar overlaps them. */
-.rm-cell {
-  border-left: 1px solid var(--border);
-  height: 100%;
+/* One gridline track per row, explicitly placed across all month columns so it
+   can't be bumped to an implicit second row by the bar that overlaps it. The
+   repeating gradient draws a 1px line at the start of every month column. */
+.rm-track {
+  align-self: stretch;
   min-height: 22px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--border) 0,
+    var(--border) 1px,
+    transparent 1px,
+    transparent var(--rm-month-col)
+  );
 }
 
 .rm-bar {
@@ -454,7 +462,7 @@ code {
 }
 
 /* Objective rows read taller than their key results to show the hierarchy. */
-.rm-objective-row .rm-cell {
+.rm-objective-row .rm-track {
   min-height: 32px;
 }
 

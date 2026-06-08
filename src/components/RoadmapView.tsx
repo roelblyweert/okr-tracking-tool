@@ -60,9 +60,10 @@ export default function RoadmapView({ objectives }: Props) {
             <Fragment key={obj.id}>
               <div className="rm-row rm-objective-row" style={{ gridTemplateColumns }}>
                 <div className="rm-label">{obj.title}</div>
-                {months.map((m) => (
-                  <div key={m} className="rm-cell" />
-                ))}
+                <div
+                  className="rm-track"
+                  style={{ gridColumn: '2 / -1', gridRow: 1 }}
+                />
                 <div
                   className="rm-bar rm-bar--objective"
                   style={{ gridColumn: `${oStart + 2} / span ${oSpan}`, gridRow: 1 }}
@@ -82,9 +83,10 @@ export default function RoadmapView({ objectives }: Props) {
                 return (
                   <div className="rm-row rm-kr-row" style={{ gridTemplateColumns }} key={kr.id}>
                     <div className="rm-label rm-label--kr">{kr.title}</div>
-                    {months.map((m) => (
-                      <div key={m} className="rm-cell" />
-                    ))}
+                    <div
+                      className="rm-track"
+                      style={{ gridColumn: '2 / -1', gridRow: 1 }}
+                    />
                     <div
                       className="rm-bar rm-bar--kr"
                       style={{ gridColumn: `${kStart + 2} / span ${kSpan}`, gridRow: 1 }}
