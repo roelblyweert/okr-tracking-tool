@@ -1,10 +1,26 @@
 import { useState } from 'react';
 import type { ObjectiveInput, ObjectiveWithKeyResults } from '../types';
-import { keyResultProgress, objectiveProgress } from '../progress';
+import { keyResultProgress, objectiveProgress, okrStatus } from '../progress';
+import type { OkrStatus } from '../progress';
 import { formatMonthLabel } from '../lib/dates';
 import ProgressBar from './ProgressBar';
 import ObjectiveForm from './ObjectiveForm';
 import KeyResultForm, { KeyResultFormValues } from './KeyResultForm';
+
+const STATUS_LABEL: Record<OkrStatus, string> = {
+  'on-track': 'On track',
+  'at-risk': 'At risk',
+  'off-track': 'Off track',
+};
+
+function StatusPill({ status }: { status: OkrStatus }) {
+  return (
+    <span className={`status-pill is-${status}`}>
+      <span className="status-dot" aria-hidden="true" />
+      {STATUS_LABEL[status]}
+    </span>
+  );
+}
 
 interface Props {
   objective: ObjectiveWithKeyResults;
@@ -26,6 +42,12 @@ export default function ObjectiveCard({
   const [editingObjective, setEditingObjective] = useState(false);
   const [addingKr, setAddingKr] = useState(false);
   const [editingKrId, setEditingKrId] = useState<string | null>(null);
+
+  const objStatus = okrStatus(
+    objectiveProgress(objective),
+    objective.starts_on,
+    objective.ends_on,
+  );
 
   if (editingObjective) {
     return (
@@ -52,6 +74,7 @@ export default function ObjectiveCard({
             </span>
             {objective.owner && <span>· {objective.owner}</span>}
           </p>
+          <StatusPill status={objStatus} />
         </div>
         <div className="row-actions">
           <button className="link" onClick={() => setEditingObjective(true)}>
@@ -72,11 +95,20 @@ export default function ObjectiveCard({
 
       {objective.description && <p className="desc">{objective.description}</p>}
 
-      <ProgressBar value={objectiveProgress(objective)} label="Objective progress" />
+      <ProgressBar
+        value={objectiveProgress(objective)}
+        label="Objective progress"
+        status={objStatus}
+      />
 
       <ul className="kr-list">
-        {objective.key_results.map((kr) =>
-          editingKrId === kr.id ? (
+        {objective.key_results.map((kr) => {
+          const krStatus = okrStatus(
+            keyResultProgress(kr),
+            kr.starts_on,
+            kr.ends_on,
+          );
+          return editingKrId === kr.id ? (
             <li key={kr.id}>
               <KeyResultForm
                 initial={kr}
@@ -96,12 +128,17 @@ export default function ObjectiveCard({
                 <span className="kr-values">
                   {kr.current_value} / {kr.target_value} {kr.unit}
                 </span>
+                <StatusPill status={krStatus} />
               </div>
               <p className="kr-dates muted">
                 {formatMonthLabel(kr.starts_on)} –{' '}
                 {formatMonthLabel(kr.ends_on)}
               </p>
-              <ProgressBar value={keyResultProgress(kr)} label={kr.title} />
+              <ProgressBar
+                value={keyResultProgress(kr)}
+                label={kr.title}
+                status={krStatus}
+              />
               <div className="row-actions">
                 <button className="link" onClick={() => setEditingKrId(kr.id)}>
                   Edit
@@ -118,8 +155,8 @@ export default function ObjectiveCard({
                 </button>
               </div>
             </li>
-          ),
-        )}
+          );
+        })}
       </ul>
 
       {addingKr ? (

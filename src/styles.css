@@ -1,14 +1,29 @@
 :root {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --surface-2: #273449;
-  --border: #334155;
-  --text: #e2e8f0;
-  --muted: #94a3b8;
-  --accent: #38bdf8;
-  --accent-strong: #0ea5e9;
-  --danger: #f87171;
-  --radius: 12px;
+  --bg: #F9FAFB;             /* Page background (off-white). */
+  --surface: #FFFFFF;        /* Cards, auth card, sticky roadmap label. */
+  --surface-2: #F2F5F7;      /* Inset KR rows, KR form, code, empty roadmap bar. */
+  --border: #DDE5EA;         /* 1px borders, dividers, gridlines. */
+  --border-strong: #68819D;  /* Heavier divider / hover border (slate). */
+  --text: #14203C;           /* Body ink (brand black). */
+  --text-strong: #14203C;    /* Headings (semantic alias). */
+  --muted: #68819D;          /* Secondary/muted text. */
+  --primary: #05A9F4;        /* Interactive accent: buttons, links, active segment, default bar. */
+  --primary-hover: #2D62FF;  /* Hover/active + focus companion. */
+  --primary-contrast: #FFFFFF; /* Text/icon on primary & status fills. */
+  --link: #05A9F4;           /* Links + .link buttons. */
+  --focus-ring: #2D62FF;     /* Focus outline color. */
+  --success: #37D592;        /* On track (dot/bar). */
+  --success-soft: #E2F8EF;   /* On-track pill background. */
+  --warning: #FFB600;        /* At risk (dot/bar). */
+  --warning-soft: #FFF4D6;   /* At-risk pill background. */
+  --danger: #FF5A5C;         /* Off track (dot/bar) + error. */
+  --danger-soft: #FFE6E6;    /* Off-track pill bg + error banner. */
+  --radius: 12px;            /* Cards/controls. */
+  --radius-sm: 8px;          /* Inputs, KR rows, bars. */
+  --radius-pill: 999px;      /* Pills, tracks, segmented control. */
+  --shadow-card: 0 1px 2px rgba(20, 32, 60, 0.04), 0 4px 12px rgba(20, 32, 60, 0.06);
+  --shadow-pop: 0 8px 24px rgba(20, 32, 60, 0.10);
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px;
 }
 
 * {
@@ -20,7 +35,8 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -49,11 +65,15 @@ body {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
 }
 
 .app-head h1 {
   font-size: 22px;
   margin: 0;
+  color: var(--text-strong);
+  font-weight: 800;
 }
 
 .app-head-right {
@@ -78,12 +98,19 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
   padding: 16px;
 }
 
 .objective h2 {
   margin: 0 0 2px;
   font-size: 18px;
+  color: var(--text-strong);
+}
+
+h2,
+h3 {
+  color: var(--text-strong);
 }
 
 .objective-head {
@@ -117,15 +144,27 @@ body {
   flex: 1;
   height: 8px;
   background: var(--surface-2);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
-  border-radius: 999px;
+  background: var(--primary);
+  border-radius: var(--radius-pill);
   transition: width 0.25s ease;
+}
+
+.progress-fill.is-on-track {
+  background: var(--success);
+}
+
+.progress-fill.is-at-risk {
+  background: var(--warning);
+}
+
+.progress-fill.is-off-track {
+  background: var(--danger);
 }
 
 .progress-pct {
@@ -134,6 +173,54 @@ body {
   color: var(--muted);
   min-width: 38px;
   text-align: right;
+}
+
+/* Status pills ------------------------------------------------------------ */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.status-pill.is-on-track {
+  background: var(--success-soft);
+  color: #127A52;
+}
+
+.status-pill.is-on-track .status-dot {
+  background: var(--success);
+}
+
+.status-pill.is-at-risk {
+  background: var(--warning-soft);
+  color: #8A5B00;
+}
+
+.status-pill.is-at-risk .status-dot {
+  background: var(--warning);
+}
+
+.status-pill.is-off-track {
+  background: var(--danger-soft);
+  color: #B5363B;
+}
+
+.status-pill.is-off-track .status-dot {
+  background: var(--danger);
 }
 
 /* Key results ------------------------------------------------------------- */
@@ -148,7 +235,7 @@ body {
 
 .kr {
   background: var(--surface-2);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 12px;
 }
 
@@ -192,24 +279,54 @@ button {
 
 button.primary,
 form button[type='submit'] {
-  background: var(--accent-strong);
-  color: #04263a;
+  background: var(--primary);
+  color: var(--primary-contrast);
   font-weight: 600;
   border: none;
 }
 
+button.primary:hover,
+button.primary:active,
+button.primary:focus-visible,
+form button[type='submit']:hover,
+form button[type='submit']:active,
+form button[type='submit']:focus-visible {
+  background: var(--primary-hover);
+}
+
+button.primary:focus-visible,
+form button[type='submit']:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
 button.secondary {
-  background: transparent;
+  background: var(--surface);
   color: var(--text);
   border: 1px solid var(--border);
+}
+
+button.secondary:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+
+button.secondary:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
 }
 
 button.link {
   background: none;
   border: none;
-  color: var(--accent);
+  color: var(--link);
   padding: 6px 8px;
   min-height: 36px;
+}
+
+button.link:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
 }
 
 button.link.danger {
@@ -237,7 +354,7 @@ button.link.danger {
 
 .kr-form {
   background: var(--surface-2);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 12px;
 }
 
@@ -250,16 +367,22 @@ input,
 textarea {
   font: inherit;
   width: 100%;
-  background: var(--bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 10px 12px;
+  font-size: 16px; /* >= 16px prevents iOS zoom on focus */
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
 }
 
 input:focus,
 textarea:focus {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 1px;
 }
 
@@ -283,6 +406,7 @@ textarea:focus {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
   padding: 28px 24px;
   width: 100%;
   max-width: 380px;
@@ -319,8 +443,8 @@ textarea:focus {
 }
 
 .error.banner {
-  background: rgba(248, 113, 113, 0.12);
-  border: 1px solid rgba(248, 113, 113, 0.3);
+  background: var(--danger-soft);
+  border: 1px solid var(--danger);
   padding: 10px 12px;
   border-radius: 10px;
 }
@@ -340,9 +464,12 @@ code {
 
 .view-toggle {
   display: flex;
+  background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
+  border-radius: var(--radius-pill);
+  overflow: visible;
+  padding: 3px;
+  gap: 2px;
 }
 
 .view-toggle button {
@@ -351,13 +478,19 @@ code {
   background: transparent;
   color: var(--muted);
   border: none;
-  border-radius: 0;
+  border-radius: calc(var(--radius-pill) - 3px);
+}
+
+.view-toggle button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
 }
 
 .view-toggle button.active {
-  background: var(--accent-strong);
-  color: #04263a;
+  background: var(--surface);
+  color: var(--primary);
   font-weight: 600;
+  box-shadow: var(--shadow-card);
 }
 
 .roadmap-scroll {
@@ -397,6 +530,7 @@ code {
   border-left: 1px solid var(--border);
   white-space: nowrap;
   text-align: center;
+  color: var(--muted);
 }
 
 /* Sticky label column stays pinned while the months scroll; its background
@@ -464,8 +598,20 @@ code {
   position: absolute;
   inset: 0 auto 0 0;
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  background: var(--primary);
   border-radius: 6px;
+}
+
+.rm-bar-fill.is-on-track {
+  background: var(--success);
+}
+
+.rm-bar-fill.is-at-risk {
+  background: var(--warning);
+}
+
+.rm-bar-fill.is-off-track {
+  background: var(--danger);
 }
 
 .rm-bar-label {

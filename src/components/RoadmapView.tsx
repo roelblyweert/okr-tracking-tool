@@ -7,7 +7,7 @@ import {
   monthDiff,
   monthIndex,
 } from '../lib/dates';
-import { keyResultProgress, objectiveProgress } from '../progress';
+import { keyResultProgress, objectiveProgress, okrStatus } from '../progress';
 
 interface Props {
   objectives: ObjectiveWithKeyResults[];
@@ -64,6 +64,7 @@ export default function RoadmapView({ objectives }: Props) {
         {objectives.map((obj) => {
           const oStart = monthIndex(timelineStart, obj.starts_on);
           const oSpan = monthDiff(obj.starts_on, obj.ends_on) + 1;
+          const oStatus = okrStatus(objectiveProgress(obj), obj.starts_on, obj.ends_on);
           return (
             <Fragment key={obj.id}>
               <div className="rm-row rm-objective-row" style={{ gridTemplateColumns }}>
@@ -78,7 +79,7 @@ export default function RoadmapView({ objectives }: Props) {
                   title={obj.title}
                 >
                   <div
-                    className="rm-bar-fill"
+                    className={`rm-bar-fill is-${oStatus}`}
                     style={{ width: `${objectiveProgress(obj)}%` }}
                   />
                   <span className="rm-bar-label">{objectiveProgress(obj)}%</span>
@@ -88,6 +89,7 @@ export default function RoadmapView({ objectives }: Props) {
               {obj.key_results.map((kr) => {
                 const kStart = monthIndex(timelineStart, kr.starts_on);
                 const kSpan = monthDiff(kr.starts_on, kr.ends_on) + 1;
+                const kStatus = okrStatus(keyResultProgress(kr), kr.starts_on, kr.ends_on);
                 return (
                   <div className="rm-row rm-kr-row" style={{ gridTemplateColumns }} key={kr.id}>
                     <div className="rm-label rm-label--kr">{kr.title}</div>
@@ -101,7 +103,7 @@ export default function RoadmapView({ objectives }: Props) {
                       title={kr.title}
                     >
                       <div
-                        className="rm-bar-fill"
+                        className={`rm-bar-fill is-${kStatus}`}
                         style={{ width: `${keyResultProgress(kr)}%` }}
                       />
                     </div>
