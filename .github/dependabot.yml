@@ -1,0 +1,16 @@
+version: 2
+updates:
+  # Keep the pinned GitHub Actions SHAs current. Dependabot opens PRs that go
+  # through the CI gate and are merged by a human — consistent with the
+  # branching strategy in CLAUDE.md (nothing reaches master unreviewed).
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  # Keep npm dependencies current and surface advisories (e.g. the esbuild
+  # dev-server issue). Same PR-gated, human-merged flow.
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly

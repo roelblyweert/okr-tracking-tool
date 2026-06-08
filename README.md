@@ -30,16 +30,34 @@ Live site (after setup): `https://roelblyweert.github.io/okr-tracking-tool/`
 > recreates them — there is no backwards compatibility, so any data already in
 > them is lost. That's acceptable for this tool; just be aware before re-running.
 
+> **Already have a live database?** To pick up the tightened email-domain
+> security rule **without losing data**, run
+> [`supabase/migrations/001_harden_domain_rls.sql`](supabase/migrations/001_harden_domain_rls.sql)
+> once in the SQL Editor instead of re-running the whole schema. A brand-new
+> project created from `schema.sql` already has it.
+
 ### 3. Point logins back to the app
 1. In Supabase, go to **Authentication → URL Configuration**.
 2. Set **Site URL** to:
    `https://roelblyweert.github.io/okr-tracking-tool/`
 3. Ensure that same URL is listed under **Redirect URLs** — the magic link
-   redirects the browser back to it after login.
+   redirects the browser back to it after login. Keep this list **exact**: do
+   **not** add wildcards or other origins, or a sign-in link could be redirected
+   to a site that then captures the token.
 
 > The email magic link works out of the box on Supabase's built-in mailer for
 > low volume; for higher reliability you can later configure a custom SMTP
 > provider under Authentication → Email.
+
+### 3a. Invite your team (sign-in is invite-only)
+The app sends a sign-in link **only to addresses that already exist** as Supabase
+users (it never auto-creates accounts from the public page). So before anyone —
+including you — can sign in:
+
+1. In Supabase, go to **Authentication → Users → Add user** (or **Invite**).
+2. Add each teammate's `@persgroep.net` email (add your own first).
+
+New starters won't be able to sign in until you add them here.
 
 ### 4. Connect the app to your Supabase project
 1. In Supabase, go to **Settings → API** and copy:
@@ -84,6 +102,31 @@ So nothing reaches the live site without a reviewed, merged PR.
 Just open the live URL and sign in. Anyone on the team with a `@persgroep.net`
 email can sign in and they all see and edit the same OKRs. Data persists in
 Supabase.
+
+## Security hardening checklist (Supabase dashboard)
+
+The live site is public, so **Row-Level Security is the only thing protecting the
+data**. A few settings live in the Supabase dashboard (not in this repo) and are
+worth checking once and after any change:
+
+- **RLS stays on.** Both `objectives` and `key_results` must keep RLS enabled
+  with the `@persgroep.net` policies from [`supabase/schema.sql`](supabase/schema.sql).
+  Never disable it.
+- **Email confirmation ON.** Authentication → Providers → Email: require email
+  confirmation, so the `email` claim in the JWT (which the RLS policy trusts) is
+  actually owned by the signer.
+- **Exact redirect URLs.** Authentication → URL Configuration: Site URL and
+  Redirect URLs set to exactly the live URL — no wildcards or extra origins.
+- **Anonymous sign-ins OFF.** Authentication → Providers: anonymous users have no
+  email, so they're already denied by RLS — keep the provider disabled anyway.
+- **Invite-only.** The app uses `shouldCreateUser: false`; add team members under
+  Authentication → Users (see step 3a above).
+- **Never expose `service_role`.** Only the `anon`/publishable key belongs in this
+  repo. The `service_role` key bypasses RLS — keep it out of the codebase entirely.
+
+> **Clickjacking note:** GitHub Pages can't set HTTP response headers, and a
+> `<meta>` CSP can't use `frame-ancestors`, so framing isn't blocked at the
+> hosting layer. That's an accepted limitation for this internal tool.
 
 ## Project layout
 

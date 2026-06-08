@@ -95,7 +95,13 @@ alter table public.key_results enable row level security;
 
 -- Helper condition: the authenticated user's email is on the team domain.
 -- (auth.jwt() ->> 'email') is the signed-in user's email, regardless of how
--- they sign in.
+-- they sign in. We compare ONLY the domain part: split_part(email,'@',2) takes
+-- the text after the (single) '@', and lower(...) makes it case-insensitive.
+-- This is stricter than a `like '%@persgroep.net'` pattern, which also accepted
+-- spoofed addresses ending in that literal string (e.g. "a@evil.com@persgroep.net").
+-- NOTE: if you ever move the live DB to this stricter check, apply
+-- supabase/migrations/001_harden_domain_rls.sql instead of re-running this whole
+-- file (re-running drops all tables).
 
 -- Objectives: full access for team members only.
 drop policy if exists "team access objectives" on public.objectives;
@@ -103,8 +109,8 @@ create policy "team access objectives"
   on public.objectives
   for all
   to authenticated
-  using      ((auth.jwt() ->> 'email') like '%@persgroep.net')
-  with check ((auth.jwt() ->> 'email') like '%@persgroep.net');
+  using      (lower(split_part(auth.jwt() ->> 'email', '@', 2)) = 'persgroep.net')
+  with check (lower(split_part(auth.jwt() ->> 'email', '@', 2)) = 'persgroep.net');
 
 -- Key results: full access for team members only.
 drop policy if exists "team access key_results" on public.key_results;
@@ -112,8 +118,8 @@ create policy "team access key_results"
   on public.key_results
   for all
   to authenticated
-  using      ((auth.jwt() ->> 'email') like '%@persgroep.net')
-  with check ((auth.jwt() ->> 'email') like '%@persgroep.net');
+  using      (lower(split_part(auth.jwt() ->> 'email', '@', 2)) = 'persgroep.net')
+  with check (lower(split_part(auth.jwt() ->> 'email', '@', 2)) = 'persgroep.net');
 
 -- Drop the obsolete allowlist helper if an earlier run created it; the policies
 -- above no longer use it. Harmless on a database that never had it.

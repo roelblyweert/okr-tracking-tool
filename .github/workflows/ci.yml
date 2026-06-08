@@ -3,6 +3,9 @@ name: CI
 # Health gate for pull requests targeting master. Type-checks and builds the
 # app so a PR can't be merged (and therefore go live) in a broken state.
 # This workflow never deploys. See CLAUDE.md for the branching strategy.
+#
+# Actions are pinned to full commit SHAs (with the tag in a comment) so a moving
+# tag can't silently change what runs in CI. Dependabot keeps the SHAs current.
 on:
   pull_request:
     branches: [master]
@@ -11,8 +14,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
           cache: npm

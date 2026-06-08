@@ -2,6 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!--
+      Defense-in-depth Content-Security-Policy. GitHub Pages can't set HTTP
+      response headers, so this is delivered via <meta>. Note: frame-ancestors,
+      sandbox and report-uri are IGNORED in a meta CSP, so clickjacking can't be
+      blocked here (acceptable for an internal tool; see README). connect-src is
+      scoped to the Supabase project (REST/auth over https, realtime over wss).
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src 'self' https://hxfgzrnmgfmhixeqgggr.supabase.co wss://hxfgzrnmgfmhixeqgggr.supabase.co; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0f172a" />
     <title>Team OKRs</title>

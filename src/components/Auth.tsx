@@ -6,6 +6,12 @@ import { supabase, SUPABASE_URL } from '../lib/supabaseClient';
 // the user to this app (the redirect URL is configured in Supabase, see
 // README.md). Authorisation is enforced server-side by Row-Level Security —
 // only @persgroep.net addresses can read or write data.
+//
+// Sign-in is invite-only: shouldCreateUser:false means a sign-in email is only
+// sent to addresses that already exist as Supabase users. This stops anyone on
+// the public internet from using the (public) anon key to trigger sign-in
+// emails to arbitrary addresses. Add new team members from the Supabase
+// dashboard (Authentication -> Users -> Add user / Invite). See README.
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>(
@@ -20,6 +26,8 @@ export default function Auth() {
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
       options: {
+        // Invite-only: don't auto-create users from this public page.
+        shouldCreateUser: false,
         emailRedirectTo: window.location.origin + import.meta.env.BASE_URL,
       },
     });
@@ -68,7 +76,16 @@ export default function Auth() {
           <button type="submit" disabled={status === 'sending'}>
             {status === 'sending' ? 'Sending…' : 'Email me a sign-in link'}
           </button>
-          {status === 'error' && <p className="error">{message}</p>}
+          {status === 'error' && (
+            <>
+              <p className="error">{message}</p>
+              <p className="muted">
+                Sign-in is invite-only. If you're on the team and don't have
+                access yet, ask the OKR admin to add your <code>@persgroep.net</code>{' '}
+                address in Supabase.
+              </p>
+            </>
+          )}
         </form>
       )}
     </div>
