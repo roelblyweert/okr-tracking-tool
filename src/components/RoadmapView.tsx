@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, type CSSProperties } from 'react';
 import type { ObjectiveWithKeyResults } from '../types';
 import {
   compareMonths,
@@ -39,11 +39,19 @@ export default function RoadmapView({ objectives }: Props) {
 
   // One template reused by every row so the label column and month columns line
   // up. (repeat(var(--x), …) is unreliable, so colCount is interpolated here.)
-  const gridTemplateColumns = `var(--rm-label-col) repeat(${colCount}, var(--rm-month-col))`;
+  // minmax(min, 1fr) lets the months stretch to fill the viewport width while
+  // never shrinking below the readable minimum — so the timeline scales up on
+  // wide screens and still scrolls (rather than squashing) when it can't fit.
+  const gridTemplateColumns = `var(--rm-label-col) repeat(${colCount}, minmax(var(--rm-month-col), 1fr))`;
+
+  // Exposed to CSS so the gridline track can space its lines as a fraction of
+  // its own width (100% / colCount), keeping them on the column boundaries no
+  // matter how wide the flexible columns grow.
+  const rootStyle = { '--rm-col-count': colCount } as CSSProperties;
 
   return (
     <div className="roadmap-scroll">
-      <div className="roadmap">
+      <div className="roadmap" style={rootStyle}>
         <div className="rm-row rm-head" style={{ gridTemplateColumns }}>
           <div className="rm-label rm-corner">Timeline</div>
           {months.map((m) => (

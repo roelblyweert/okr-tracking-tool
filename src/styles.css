@@ -368,6 +368,12 @@ code {
 .roadmap {
   --rm-label-col: 180px;
   --rm-month-col: 64px;
+  /* Overridden inline with the real month count; the fallback keeps the
+     gridline gradient's calc(100% / …) from dividing by zero. */
+  --rm-col-count: 1;
+  /* max-content is the sum of the minimum column widths. Below it the view
+     scrolls (columns stay readable); above it the block fills the container and
+     the 1fr columns stretch to absorb the extra width. */
   min-width: max-content;
   display: flex;
   flex-direction: column;
@@ -415,7 +421,9 @@ code {
 
 /* One gridline track per row, explicitly placed across all month columns so it
    can't be bumped to an implicit second row by the bar that overlaps it. The
-   repeating gradient draws a 1px line at the start of every month column. */
+   repeating gradient draws a 1px line at the start of every month column. The
+   period is a fraction of the track's own width (which spans every month), so
+   the lines stay on the column boundaries as the flexible columns stretch. */
 .rm-track {
   align-self: stretch;
   min-height: 22px;
@@ -424,7 +432,7 @@ code {
     var(--border) 0,
     var(--border) 1px,
     transparent 1px,
-    transparent var(--rm-month-col)
+    transparent calc(100% / var(--rm-col-count))
   );
 }
 
