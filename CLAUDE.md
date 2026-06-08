@@ -48,6 +48,24 @@ Live URL: `https://roelblyweert.github.io/okr-tracking-tool/`
   project path (i.e. the repository name) or assets break in production.
 - Progress math lives in `src/progress.ts`; reuse it, don't reinvent.
 
+## Design language
+
+- The UI follows **Perdoo's** clean **light** product look (the OKR SaaS at
+  `perdoo.com`): off-white page, white softly-shadowed cards, brand-black ink,
+  slate muted text, sky-blue primary. **All design tokens live in the `:root`
+  block of `src/styles.css`** — reuse them; don't hard-code colors in components.
+- **Status-first (Perdoo's hallmark).** Every objective and key result shows an
+  **On track / At risk / Off track** status as a colored pill plus a
+  status-colored progress/roadmap bar. Status is **pace-based**: `okrStatus()` in
+  `src/progress.ts` compares actual progress to the progress expected for the
+  elapsed share of the OKR's window. Keep this logic in `src/progress.ts`.
+- **Fonts must be self-hosted.** The typeface is Plus Jakarta Sans, bundled via
+  `@fontsource-variable/plus-jakarta-sans` and imported once in `src/main.tsx`.
+  The strict CSP (`font-src 'self'`, see `index.html`) forbids external fonts —
+  **never** add a Google Fonts CDN or any external font/style URL; bundle it.
+- Stay mobile-first (iPad): keep ≥44px tap targets and ≥16px inputs (avoids iOS
+  zoom).
+
 ## Key files
 
 | Path                          | Purpose                                  |
@@ -55,7 +73,8 @@ Live URL: `https://roelblyweert.github.io/okr-tracking-tool/`
 | `src/lib/supabaseClient.ts`   | Supabase client + URL/anon-key config    |
 | `src/api.ts`                  | All DB reads/writes (CRUD wrappers)      |
 | `src/types.ts`                | `Objective` / `KeyResult` types          |
-| `src/progress.ts`             | Progress % calculations                  |
+| `src/progress.ts`             | Progress % + pace-based OKR status        |
+| `src/main.tsx`                | Entry point + self-hosted font import     |
 | `src/App.tsx`                 | Auth gate + dashboard + handlers         |
 | `src/components/`             | UI (Auth, ObjectiveCard, forms, etc.)    |
 | `supabase/schema.sql`         | Tables + RLS (run once in Supabase)      |
