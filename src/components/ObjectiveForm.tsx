@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import type { ObjectiveInput, ObjectiveWithKeyResults } from '../types';
+import {
+  compareMonths,
+  dateToMonthInput,
+  monthInputToDate,
+} from '../lib/dates';
 
 interface Props {
   initial?: ObjectiveWithKeyResults;
@@ -7,17 +12,32 @@ interface Props {
   onCancel: () => void;
 }
 
+// Current month as a 'YYYY-MM' value for <input type="month"> defaults.
+function currentMonthInput(): string {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+}
+
 // Used for both "add" (no initial) and "edit" (initial provided).
 export default function ObjectiveForm({ initial, onSubmit, onCancel }: Props) {
   const [title, setTitle] = useState(initial?.title ?? '');
   const [description, setDescription] = useState(initial?.description ?? '');
   const [owner, setOwner] = useState(initial?.owner ?? '');
-  const [quarter, setQuarter] = useState(initial?.quarter ?? '');
+  const [startMonth, setStartMonth] = useState(
+    initial ? dateToMonthInput(initial.starts_on) : currentMonthInput(),
+  );
+  const [endMonth, setEndMonth] = useState(
+    initial ? dateToMonthInput(initial.ends_on) : currentMonthInput(),
+  );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (compareMonths(endMonth, startMonth) < 0) {
+      setError('End month must be on or after the start month.');
+      return;
+    }
     setSaving(true);
     setError('');
     try {
@@ -25,7 +45,8 @@ export default function ObjectiveForm({ initial, onSubmit, onCancel }: Props) {
         title: title.trim(),
         description: description.trim(),
         owner: owner.trim(),
-        quarter: quarter.trim(),
+        starts_on: monthInputToDate(startMonth),
+        ends_on: monthInputToDate(endMonth),
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
@@ -63,12 +84,24 @@ export default function ObjectiveForm({ initial, onSubmit, onCancel }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="obj-quarter">Quarter</label>
+          <label htmlFor="obj-start">Start month</label>
           <input
-            id="obj-quarter"
-            value={quarter}
-            onChange={(e) => setQuarter(e.target.value)}
-            placeholder="2026 Q2"
+            id="obj-start"
+            type="month"
+            value={startMonth}
+            onChange={(e) => setStartMonth(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="obj-end">End month</label>
+          <input
+            id="obj-end"
+            type="month"
+            value={endMonth}
+            min={startMonth}
+            onChange={(e) => setEndMonth(e.target.value)}
+            required
           />
         </div>
       </div>

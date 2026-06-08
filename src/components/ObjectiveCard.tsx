@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { ObjectiveInput, ObjectiveWithKeyResults } from '../types';
 import { keyResultProgress, objectiveProgress } from '../progress';
+import { formatMonthLabel } from '../lib/dates';
 import ProgressBar from './ProgressBar';
 import ObjectiveForm from './ObjectiveForm';
 import KeyResultForm, { KeyResultFormValues } from './KeyResultForm';
@@ -45,7 +46,10 @@ export default function ObjectiveCard({
         <div>
           <h2>{objective.title}</h2>
           <p className="meta">
-            {objective.quarter && <span>{objective.quarter}</span>}
+            <span>
+              {formatMonthLabel(objective.starts_on)} –{' '}
+              {formatMonthLabel(objective.ends_on)}
+            </span>
             {objective.owner && <span>· {objective.owner}</span>}
           </p>
         </div>
@@ -76,6 +80,8 @@ export default function ObjectiveCard({
             <li key={kr.id}>
               <KeyResultForm
                 initial={kr}
+                objectiveStart={objective.starts_on}
+                objectiveEnd={objective.ends_on}
                 onSubmit={async (values) => {
                   await onEditKeyResult(kr.id, values);
                   setEditingKrId(null);
@@ -91,6 +97,10 @@ export default function ObjectiveCard({
                   {kr.current_value} / {kr.target_value} {kr.unit}
                 </span>
               </div>
+              <p className="kr-dates muted">
+                {formatMonthLabel(kr.starts_on)} –{' '}
+                {formatMonthLabel(kr.ends_on)}
+              </p>
               <ProgressBar value={keyResultProgress(kr)} label={kr.title} />
               <div className="row-actions">
                 <button className="link" onClick={() => setEditingKrId(kr.id)}>
@@ -114,6 +124,8 @@ export default function ObjectiveCard({
 
       {addingKr ? (
         <KeyResultForm
+          objectiveStart={objective.starts_on}
+          objectiveEnd={objective.ends_on}
           onSubmit={async (values) => {
             await onAddKeyResult(objective.id, values);
             setAddingKr(false);

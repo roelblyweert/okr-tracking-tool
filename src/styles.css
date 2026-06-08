@@ -169,6 +169,17 @@ body {
   white-space: nowrap;
 }
 
+.kr-dates {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.kr-window-hint {
+  margin: 2px 0 0;
+  font-size: 12px;
+}
+
 /* Buttons ----------------------------------------------------------------- */
 button {
   font: inherit;
