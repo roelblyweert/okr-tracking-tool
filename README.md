@@ -47,12 +47,28 @@ Live site (after setup): `https://roelblyweert.github.io/okr-tracking-tool/`
 
 The "Continue with Google" button only works once the Google provider is wired
 up in Google Cloud **and** Supabase. The app code cannot do this for you — these
-steps are done by hand from the iPad browser, once:
+steps are done by hand from the iPad browser, once.
+
+> **This is free.** Setting up "Sign in with Google" does **not** require a paid
+> Google Cloud subscription or a billing account — creating a project, the OAuth
+> consent screen, and a Web OAuth client ID all cost nothing. Google Cloud only
+> charges for billable resources (VMs, certain APIs beyond free quotas), which
+> authentication never touches.
 
 1. **Google Cloud Console** ([console.cloud.google.com](https://console.cloud.google.com)):
-   - Create or select a project.
-   - **APIs & Services → OAuth consent screen**: choose **External**, set an app
-     name and a support email, and add the `persgroep.net` domain.
+   - Create or select a project (no billing prompt is required for the steps below).
+   - **APIs & Services → OAuth consent screen**:
+     - **User type:** choose **Internal** *if* `persgroep.net` is a Google
+       Workspace organisation and this project lives inside it — that limits
+       sign-in to the org and avoids any warning screen. Otherwise choose
+       **External**.
+     - Set an app name and a support email. (You can leave it in **Testing**
+       publishing status — you do **not** need to "publish" the app or submit it
+       for Google verification, because we only request the basic email/profile
+       scopes.)
+     - **External + Testing only:** under **Test users**, add each team member's
+       `@persgroep.net` address. Test users sign in with **no** "unverified app"
+       warning. (Up to 100 test users — plenty for a team.)
    - **APIs & Services → Credentials → Create Credentials → OAuth client ID →
      Web application**.
    - Set the **Authorized redirect URI** to the Supabase auth callback:
@@ -70,6 +86,9 @@ steps are done by hand from the iPad browser, once:
 4. **RLS is unchanged.** A Google account must still resolve to an
    `@persgroep.net` email to read or write data — signing in with a personal
    Google account will authenticate but see (and be able to change) nothing.
+
+> Until a Google account is configured, use the **email magic link** below the
+> button — it works without any of the steps above.
 
 ### 4. Connect the app to your Supabase project
 1. In Supabase, go to **Settings → API** and copy:
