@@ -301,6 +301,28 @@ textarea:focus {
   gap: 10px;
 }
 
+.auth-google {
+  width: 100%;
+}
+
+/* "or" separator between Google sign-in and the magic-link form. The lines
+   are drawn with pseudo-elements either side of the centred span. */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
 /* Misc -------------------------------------------------------------------- */
 .muted {
   color: var(--muted);

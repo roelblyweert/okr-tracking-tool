@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { useState } from 'react';
 import { supabase, SUPABASE_URL } from '../lib/supabaseClient';
 
@@ -18,13 +19,30 @@ export default function Auth() {
     setMessage('');
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
-      options: { emailRedirectTo: window.location.href },
+      options: {
+        emailRedirectTo: window.location.origin + import.meta.env.BASE_URL,
+      },
     });
     if (error) {
       setStatus('error');
       setMessage(error.message);
     } else {
       setStatus('sent');
+    }
+  }
+
+  // Google OAuth is the primary sign-in. On success Supabase redirects the
+  // browser away, so there is no success state to set here.
+  async function signInWithGoogle() {
+    setStatus('sending');
+    setMessage('');
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + import.meta.env.BASE_URL },
+    });
+    if (error) {
+      setStatus('error');
+      setMessage(error.message);
     }
   }
 
@@ -50,23 +68,36 @@ export default function Auth() {
           Open it on this device to continue.
         </p>
       ) : (
-        <form onSubmit={sendLink}>
-          <label htmlFor="email">Sign in with your work email</label>
-          <input
-            id="email"
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            placeholder="you@persgroep.net"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <button type="submit" disabled={status === 'sending'}>
-            {status === 'sending' ? 'Sending…' : 'Email me a sign-in link'}
+        <>
+          <button
+            type="button"
+            className="primary auth-google"
+            onClick={signInWithGoogle}
+            disabled={status === 'sending'}
+          >
+            Continue with Google
           </button>
-          {status === 'error' && <p className="error">{message}</p>}
-        </form>
+          <div className="divider">
+            <span>or</span>
+          </div>
+          <form onSubmit={sendLink}>
+            <label htmlFor="email">Sign in with your work email</label>
+            <input
+              id="email"
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              placeholder="you@persgroep.net"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <button type="submit" disabled={status === 'sending'}>
+              {status === 'sending' ? 'Sending…' : 'Email me a sign-in link'}
+            </button>
+            {status === 'error' && <p className="error">{message}</p>}
+          </form>
+        </>
       )}
     </div>
   );
