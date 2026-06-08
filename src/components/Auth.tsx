@@ -5,7 +5,7 @@ import { supabase, SUPABASE_URL } from '../lib/supabaseClient';
 // Magic-link login. The email is sent by Supabase; clicking the link returns
 // the user to this app (the redirect URL is configured in Supabase, see
 // README.md). Authorisation is enforced server-side by Row-Level Security —
-// only allowlisted addresses can read or write data (see supabase/schema.sql).
+// only @persgroep.net addresses can read or write data.
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>(
