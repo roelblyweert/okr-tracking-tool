@@ -10,7 +10,7 @@
 -- Row-Level Security (RLS) below only allows access to signed-in users whose
 -- email is on an explicit allowlist (see public.is_allowed() further down).
 -- This is an allowlist of individual addresses — not a whole domain — so
--- personal accounts (e.g. a Gmail via Google sign-in) can be granted access
+-- personal accounts (e.g. a Gmail) can be granted access
 -- one at a time. Everyone on the list shares one set of OKRs.
 -- NEVER disable RLS on these tables. See CLAUDE.md.
 --
@@ -97,9 +97,9 @@ alter table public.objectives  enable row level security;
 alter table public.key_results enable row level security;
 
 -- Helper: is the signed-in user on the access allowlist?
--- (auth.jwt() ->> 'email') is the signed-in user's email; this is auth-method
--- agnostic, so it works for both Google sign-in and the email magic link. The
--- comparison is lower-cased on both sides so casing can never lock someone out.
+-- (auth.jwt() ->> 'email') is the signed-in user's email (from the email
+-- magic-link sign-in). The comparison is lower-cased on both sides so casing
+-- can never lock someone out.
 --
 -- TO ADD OR REMOVE SOMEONE: edit the list below (lower-case addresses only) and
 -- re-run JUST this function in the Supabase SQL Editor. The policies reference
