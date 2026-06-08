@@ -169,6 +169,17 @@ body {
   white-space: nowrap;
 }
 
+.kr-dates {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.kr-window-hint {
+  margin: 2px 0 0;
+  font-size: 12px;
+}
+
 /* Buttons ----------------------------------------------------------------- */
 button {
   font: inherit;
@@ -319,4 +330,141 @@ code {
   padding: 1px 5px;
   border-radius: 5px;
   font-size: 0.9em;
+}
+
+/* Roadmap ----------------------------------------------------------------- */
+/* Relax the 760px cap so the month grid can stretch (roadmap view only). */
+.app--wide {
+  max-width: none;
+}
+
+.view-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.view-toggle button {
+  min-height: 36px;
+  padding: 6px 14px;
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  border-radius: 0;
+}
+
+.view-toggle button.active {
+  background: var(--accent-strong);
+  color: #04263a;
+  font-weight: 600;
+}
+
+.roadmap-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.roadmap {
+  --rm-label-col: 180px;
+  --rm-month-col: 64px;
+  min-width: max-content;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* grid-template-columns is supplied inline per row (interpolated colCount). */
+.rm-row {
+  display: grid;
+  align-items: center;
+}
+
+.rm-head .rm-month,
+.rm-corner {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 4px 6px;
+}
+
+.rm-month {
+  border-left: 1px solid var(--border);
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Sticky label column stays pinned while the months scroll; its background
+   (z-index 2) covers any bar (z-index 1) sliding underneath it. */
+.rm-label {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--surface);
+  padding: 6px 10px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rm-label--kr {
+  color: var(--muted);
+  padding-left: 22px;
+  font-size: 12px;
+}
+
+/* One gridline track per row, explicitly placed across all month columns so it
+   can't be bumped to an implicit second row by the bar that overlaps it. The
+   repeating gradient draws a 1px line at the start of every month column. */
+.rm-track {
+  align-self: stretch;
+  min-height: 22px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--border) 0,
+    var(--border) 1px,
+    transparent 1px,
+    transparent var(--rm-month-col)
+  );
+}
+
+.rm-bar {
+  position: relative;
+  z-index: 1;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* Objective rows read taller than their key results to show the hierarchy. */
+.rm-objective-row .rm-track {
+  min-height: 32px;
+}
+
+.rm-bar--objective {
+  height: 28px;
+}
+
+.rm-bar--kr {
+  height: 16px;
+}
+
+.rm-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  border-radius: 6px;
+}
+
+.rm-bar-label {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  color: var(--text);
+  padding: 0 6px;
+  font-variant-numeric: tabular-nums;
 }

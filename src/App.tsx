@@ -14,6 +14,7 @@ import {
 import Auth from './components/Auth';
 import ObjectiveCard from './components/ObjectiveCard';
 import ObjectiveForm from './components/ObjectiveForm';
+import RoadmapView from './components/RoadmapView';
 import type { KeyResultFormValues } from './components/KeyResultForm';
 
 export default function App() {
@@ -52,6 +53,7 @@ function Dashboard({ email }: { email: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [adding, setAdding] = useState(false);
+  const [view, setView] = useState<'list' | 'roadmap'>('list');
 
   async function refresh() {
     setError('');
@@ -97,9 +99,23 @@ function Dashboard({ email }: { email: string }) {
   }
 
   return (
-    <div className="app">
+    <div className={view === 'roadmap' ? 'app app--wide' : 'app'}>
       <header className="app-head">
         <h1>Team OKRs</h1>
+        <div className="view-toggle" role="tablist">
+          <button
+            className={view === 'list' ? 'active' : ''}
+            onClick={() => setView('list')}
+          >
+            List
+          </button>
+          <button
+            className={view === 'roadmap' ? 'active' : ''}
+            onClick={() => setView('roadmap')}
+          >
+            Roadmap
+          </button>
+        </div>
         <div className="app-head-right">
           <span className="who">{email}</span>
           <button className="link" onClick={() => supabase.auth.signOut()}>
@@ -112,6 +128,8 @@ function Dashboard({ email }: { email: string }) {
 
       {loading ? (
         <p className="muted">Loading OKRs…</p>
+      ) : view === 'roadmap' ? (
+        <RoadmapView objectives={objectives} />
       ) : (
         <>
           {objectives.length === 0 && !adding && (

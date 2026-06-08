@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { useState } from 'react';
 import { supabase, SUPABASE_URL } from '../lib/supabaseClient';
 
@@ -18,7 +19,9 @@ export default function Auth() {
     setMessage('');
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
-      options: { emailRedirectTo: window.location.href },
+      options: {
+        emailRedirectTo: window.location.origin + import.meta.env.BASE_URL,
+      },
     });
     if (error) {
       setStatus('error');
