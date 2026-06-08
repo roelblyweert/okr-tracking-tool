@@ -8,7 +8,10 @@
 -- SECURITY MODEL (read before changing anything):
 -- The GitHub Pages site is public, so the *database* is what protects the data.
 -- Row-Level Security (RLS) below only allows access to signed-in users whose
--- email ends in @persgroep.net. Everyone on the team shares one set of OKRs.
+-- email is on an explicit allowlist (see public.is_allowed() further down).
+-- This is an allowlist of individual addresses — not a whole domain — so
+-- personal accounts (e.g. a Gmail via Google sign-in) can be granted access
+-- one at a time. Everyone on the list shares one set of OKRs.
 -- NEVER disable RLS on these tables. See CLAUDE.md.
 --
 -- TIMELINE MODEL:
@@ -93,24 +96,39 @@ create trigger trg_kr_within_objective
 alter table public.objectives  enable row level security;
 alter table public.key_results enable row level security;
 
--- Helper condition: the authenticated user's email is on the team domain.
--- (auth.jwt() ->> 'email') is the signed-in user's email. This is auth-method
--- agnostic, so it works for both Google OAuth and the email magic link.
+-- Helper: is the signed-in user on the access allowlist?
+-- (auth.jwt() ->> 'email') is the signed-in user's email; this is auth-method
+-- agnostic, so it works for both Google sign-in and the email magic link. The
+-- comparison is lower-cased on both sides so casing can never lock someone out.
+--
+-- TO ADD OR REMOVE SOMEONE: edit the list below (lower-case addresses only) and
+-- re-run JUST this function in the Supabase SQL Editor. The policies reference
+-- it, so nothing else needs to change.
+create or replace function public.is_allowed()
+returns boolean
+language sql
+stable
+as $$
+  select lower(auth.jwt() ->> 'email') in (
+    'roel.blyweert1@persgroep.net',
+    'blyweert.roel@gmail.com'
+  );
+$$;
 
--- Objectives: full access for team members only.
+-- Objectives: full access for allowlisted users only.
 drop policy if exists "team access objectives" on public.objectives;
 create policy "team access objectives"
   on public.objectives
   for all
   to authenticated
-  using      ((auth.jwt() ->> 'email') like '%@persgroep.net')
-  with check ((auth.jwt() ->> 'email') like '%@persgroep.net');
+  using      (public.is_allowed())
+  with check (public.is_allowed());
 
--- Key results: full access for team members only.
+-- Key results: full access for allowlisted users only.
 drop policy if exists "team access key_results" on public.key_results;
 create policy "team access key_results"
   on public.key_results
   for all
   to authenticated
-  using      ((auth.jwt() ->> 'email') like '%@persgroep.net')
-  with check ((auth.jwt() ->> 'email') like '%@persgroep.net');
+  using      (public.is_allowed())
+  with check (public.is_allowed());

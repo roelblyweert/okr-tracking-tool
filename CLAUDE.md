@@ -37,8 +37,12 @@ Live URL: `https://roelblyweert.github.io/okr-tracking-tool/`
   anywhere in the repo.
 - **Row-Level Security (RLS) is the only thing protecting the data** — the page
   itself is public. Policies (see `supabase/schema.sql`) restrict all access to
-  signed-in users whose email ends in `@persgroep.net`. Every table must have
-  domain-gated RLS. **Never disable RLS.**
+  signed-in users whose email is on an explicit **allowlist** of individual
+  addresses (not a whole domain), so personal accounts like Gmail can be granted
+  access one at a time. The list lives in the `public.is_allowed()` helper, and
+  both table policies call it — to add/remove someone, edit that one function and
+  re-run it in the Supabase SQL Editor. Every table must gate RLS through
+  `is_allowed()`. **Never disable RLS.**
 
 ## Code conventions
 
