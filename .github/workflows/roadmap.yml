@@ -1,0 +1,47 @@
+name: Roadmap diagrams
+
+# Validates that every Mermaid diagram in roadmap/ actually parses, so a PR
+# can't merge a diagram that GitHub would fail to render. Runs only when roadmap
+# files change, separate from ci.yml (the app's type-check + build gate).
+#
+# mermaid-cli is run via npx and is intentionally NOT a package.json dependency
+# (CLAUDE.md: keep dependencies minimal). Actions are pinned to commit SHAs to
+# match ci.yml.
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'roadmap/**'
+      - '.github/workflows/roadmap.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20
+      # Chromium (needed by mermaid-cli's headless renderer) is available on the
+      # ubuntu-latest runner via Playwright/Puppeteer's bundled download. A
+      # Puppeteer config supplies --no-sandbox, required to render in CI.
+      - name: Write Puppeteer config
+        run: echo '{ "args": ["--no-sandbox"] }' > /tmp/puppeteer.json
+      # `_templates/` is skipped: template files hold <placeholder> text on
+      # purpose, which is not valid Mermaid.
+      - name: Validate Mermaid diagrams
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/roadmap-out
+          status=0
+          while IFS= read -r -d '' f; do
+            echo "Validating $f"
+            if ! npx -y @mermaid-js/mermaid-cli \
+                  --puppeteerConfigFile /tmp/puppeteer.json \
+                  -i "$f" -o "/tmp/roadmap-out/$(basename "$f")"; then
+              echo "::error file=$f::Mermaid diagram failed to parse/render"
+              status=1
+            fi
+          done < <(find roadmap -name '*.md' -not -path 'roadmap/_templates/*' -print0)
+          exit $status

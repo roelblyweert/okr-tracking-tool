@@ -103,6 +103,14 @@ Just open the live URL and sign in. Anyone on the team with a `@persgroep.net`
 email can sign in and they all see and edit the same OKRs. Data persists in
 Supabase.
 
+## Roadmap
+
+The longer-horizon product roadmap lives in [`roadmap/`](roadmap/) as Markdown
+with [Mermaid](https://mermaid.js.org/) diagrams (GitHub renders them as
+pictures). It follows a **Mission → Initiative → KPI → Epic** hierarchy and is
+separate from the live OKR data in the app. Start at
+[`roadmap/README.md`](roadmap/README.md); diagrams are syntax-checked in CI.
+
 ## Security hardening checklist (Supabase dashboard)
 
 The live site is public, so **Row-Level Security is the only thing protecting the

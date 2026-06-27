@@ -66,6 +66,22 @@ Live URL: `https://roelblyweert.github.io/okr-tracking-tool/`
 - Stay mobile-first (iPad): keep ≥44px tap targets and ≥16px inputs (avoids iOS
   zoom).
 
+## Roadmap (Mermaid)
+
+- The product **roadmap lives in `roadmap/`** as Markdown with embedded
+  [Mermaid](https://mermaid.js.org/) diagrams (GitHub renders them natively).
+  It is a planning/narrative layer and is **separate from the app's live OKR
+  data** in Supabase — no `src/` code reads it.
+- Hierarchy (high → low): **Mission → Initiative → KPI → Epic** (epics are
+  deliverables scheduled per quarter). One file per initiative under
+  `roadmap/initiatives/`; `roadmap/mission.md` ties them together.
+- Diagram-per-level convention: `mindmap` for the mission tree, `flowchart` for
+  an initiative's KPIs, `gantt` (one section per quarter) for epics. See
+  `roadmap/README.md` and copy `roadmap/_templates/initiative.md` to add one.
+- Diagrams are **validated in CI** by `.github/workflows/roadmap.yml` (runs only
+  on `roadmap/**` changes). It uses `@mermaid-js/mermaid-cli` via `npx` — do
+  **not** add it to `package.json` (keep dependencies minimal).
+
 ## Key files
 
 | Path                          | Purpose                                  |
@@ -76,9 +92,9 @@ Live URL: `https://roelblyweert.github.io/okr-tracking-tool/`
 | `src/progress.ts`             | Progress % + pace-based OKR status        |
 | `src/main.tsx`                | Entry point + self-hosted font import     |
 | `src/App.tsx`                 | Auth gate + dashboard + handlers         |
-| `src/components/`             | UI (Auth, ObjectiveCard, forms, etc.)    |
+| `roadmap/`                    | Roadmap as Mermaid (mission→initiative→KPI→epic) |
 | `supabase/schema.sql`         | Tables + RLS (run once in Supabase)      |
-| `.github/workflows/`          | `ci.yml` (PR gate) + `deploy.yml` (live) |
+| `.github/workflows/`          | `ci.yml` (PR gate) + `deploy.yml` (live) + `roadmap.yml` (diagram lint) |
 
 ## Setup
 
